@@ -1,0 +1,33 @@
+{
+  "name": "vue-mini-weather",
+<<<<<<< HEAD
+  "version": "0.2.9",
+=======
+  "version": "0.2.8",
+>>>>>>> 016a9f605010d47b24e3bb4b457f148008807dda
+  "author": "aidioute",
+  "license": "MIT",
+  "description": "基于 Vue 的迷你天气预报组件",
+  "main": "lib/main.js",
+  "keyword": "vue weather mini-weather",
+  "private": false,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lib": "vue-cli-service build --target lib --name vcolorpicker --dest lib packages/index.js"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "lottie-web": "^5.7.0",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.4.0",
+    "@vue/cli-service": "~4.4.0",
+    "axios": "^0.18.0",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "vue-cli-plugin-axios": "0.0.4",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
