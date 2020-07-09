@@ -1,10 +1,6 @@
 {
   "name": "vue-mini-weather",
-<<<<<<< HEAD
   "version": "0.2.9",
-=======
-  "version": "0.2.8",
->>>>>>> 016a9f605010d47b24e3bb4b457f148008807dda
   "author": "aidioute",
   "license": "MIT",
   "description": "基于 Vue 的迷你天气预报组件",
