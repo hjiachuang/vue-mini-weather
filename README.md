@@ -14,32 +14,8 @@
 [vue-mini-weather展示页](https://api.aidioute.cn/resource/vue-mini-weather/)
 
 > 基于Vue框架开发的一款迷你天气预报展示的小组件 有问题请提[issue](https://github.com/hjiachuang/vue-mini-weather/issues)
-
-#### 目录介绍
-```
-    - examples                  **实例存放的文件夹
-        - App.vue
-        - main.css
-        - main.js
-    - npm                       **打包上传到npm仓库的项目内容
-        - lib
-            - index.js
-            - index.css
-        - main.js
-    - lib                       **打包库文件
-    -dist                       **项目展示
-        - index.html
-    - packages                  **源文件
-        - iconJson                  **这是各种天气icon的AE动画保存的json文件
-        - vWeather                  **源组件
-        - index.js
-    -public
-        - index.html
-    - ...
-```
-
 #### 📦 安装
-*  2020.07.07 因为刚上传到npm仓库没多久，可能其他镜像库还没有镜像过去，所以要下载只能切换npm源为官方源。
+*  2021.02.28 因为刚上传到npm仓库没多久，可能其他镜像库还没有镜像过去，所以要下载只能切换npm源为官方源。
 
 ```javascript
 //命令行
@@ -85,7 +61,7 @@ iconSize: {     //天气小组件在 multiline 类型下icon的尺寸大小，�
 
     更新时间：2021.02.28
 
-    感谢这位老哥[OrangeHong](https://github.com/OrangeHong)提出的issues，在IE浏览器下报错，现在重新封装，包比之前的大了几十k，因为导入了babel-polyfill为了兼容IE，目前只支持IE10+，再往下的版本我就不兼容了哈，抱歉。
+    感谢这位老哥[OrangeHong](https://github.com/OrangeHong)提出的issues，在IE浏览器下报错，现在重新封装，包比之前的大了几十k，因为导入了babel-polyfill为了兼容IE，目前只支持IE10+，再往下的版本我就不兼容了哈，抱歉。如果项目不考虑IE浏览器的话可以选择0.2.9版本。
 
 * **版本0.2.9**
 
@@ -135,4 +111,4 @@ iconSize: {     //天气小组件在 multiline 类型下icon的尺寸大小，�
 
 [MIT](https://github.com/hjiachuang/vue-mini-weather/blob/master/LICENSE)
 
-Copyright © 2020-present [hjiachuang](https://github.com/hjiachuang).
+Copyright © 2021-present [hjiachuang](https://github.com/hjiachuang).
