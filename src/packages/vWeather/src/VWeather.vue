@@ -33,10 +33,8 @@
 </template>
 
 <script>
-    //临时依赖,打包成库时需要注释掉，如果是项目测试则需要打开注释
     // import axios from 'axios'
     // import Lottie from 'lottie-web'
-    //
 
     import weatherIcon from '../../iconJson'
 
@@ -69,7 +67,7 @@
             location: {},   //定位功能获取的经纬度
             ip: null,
             position: {},   //经纬度查询获得的位置信息
-            weather: {},    
+            weather: {},
             weatherIconAnimation: null,
             locationIconAimation: null,
             timer: null,

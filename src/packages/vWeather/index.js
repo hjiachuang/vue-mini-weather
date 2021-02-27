@@ -1,6 +1,6 @@
 import vWeather from './src/VWeather'
 
-vWeather.install = (Vue) => {
+vWeather.install = function(Vue){
     Vue.component(vWeather.name, vWeather)
 }
 

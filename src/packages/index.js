@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import vWeather from './vWeather'
 
 const install = (Vue) => {
