@@ -11,26 +11,44 @@
 </div>
 
 #### 项目展示
-[vue-mini-weather展示页](https://api.aidioute.cn/resource/vue-mini-weather/)
+[vue-mini-weather展示页](https://apia.aidioute.cn/resource/vue-mini-weather/)
 
 > 基于Vue框架开发的一款迷你天气预报展示的小组件 有问题请提[issue](https://github.com/hjiachuang/vue-mini-weather/issues)
 #### 📦 安装
-*  2021.02.28 因为刚上传到npm仓库没多久，可能其他镜像库还没有镜像过去，所以要下载只能切换npm源为官方源。
+*  2021.04.07 因为刚上传到npm仓库没多久，可能其他镜像库还没有镜像过去，所以要下载只能切换npm源为官方源。
+
+```bash
+npm i vue-mini-weather --save
+```
 
 ```javascript
-//命令行
-npm install vue-mini-weather
+// 1. 全局引入
 
 //main.js 项目入口文件
 import Vue from 'vue'
 import weather from 'vue-mini-weather'
-
 Vue.use(weather)
 
 //app.vue 项目文件
 <template>
-    <v-mini-weather size type color iconSize ></v-mini-weather>
+  <v-mini-weather size type color iconSize ></v-mini-weather>
 </template>
+
+// 2. 局部引入 
+//app.vue 项目文件
+<template>
+  <v-mini-weather size type color iconSize ></v-mini-weather>
+</template>
+
+<script>
+import { vMiniWeather } from 'vue-mini-weather'
+export default {
+  components: {
+    vMiniWeather
+  }
+}
+</script>
+
 ```
 
 #### 📝 参数说明
@@ -57,41 +75,49 @@ iconSize: {     //天气小组件在 multiline 类型下icon的尺寸大小，�
 
 ##### 📖 更新
 
+* **版本0.3.2**
+
+  更新时间：2021.04.07
+
+  1. 好无奈啊，之前用的[中国天气网](http://www.weather.com.cn/)的数据是从它官方免费的插件中提取的API，近期它的插件居然变成收费的了。所以，接口失效了。所以更新了下，换成自己的API。但是有一点需要注意的，就是我的API接口文件是运行在辣鸡服务器上的，并发什么的没法保证，如果要求高的，我把API的源文件附在php文件夹中，自己下载然后部署到自己的服务器上，然后改源码就行了。
+  2. 添加了`ant-design-vue`中的`message`组件，所以打包文件大了很多。自行考虑。
+  3. 移除了上个版本添加的对IE的支持，需要的自行在github上下载然后在`src/lib/index`头部添加`import 'babel-polyfill'`。
+
 * **版本0.3.0、版本0.3.1**
 
-    更新时间：2021.02.28
+  更新时间：2021.02.28
 
-    感谢这位老哥[OrangeHong](https://github.com/OrangeHong)提出的issues，在IE浏览器下报错，现在重新封装，包比之前的大了几十k，因为导入了babel-polyfill为了兼容IE，目前只支持IE10+，再往下的版本我就不兼容了哈，抱歉。如果项目不考虑IE浏览器的话可以选择0.2.9版本。
+  感谢这位老哥[OrangeHong](https://github.com/OrangeHong)提出的issues，在IE浏览器下报错，现在重新封装，包比之前的大了几十k，因为导入了babel-polyfill为了兼容IE，目前只支持IE10+，再往下的版本我就不兼容了哈，抱歉。如果项目不考虑IE浏览器的话可以选择0.2.9版本。
 
 * **版本0.2.9**
 
-    更新时间：2020.07.09
+  更新时间：2020.07.09
 
-    由于**animated-icons**的源码写的是固定颜色值 **[0,0,0,1]** 的，我以为就是正常的 **[0-255]** 的rgb+alpha，所以我就自己改成了变量r，g，b然后动态赋颜色值。昨天测试发现，诶，它居然不是 **[0-255]**，而是 **[0-255] / 255**。哈哈哈哈所以我就在组件赋值那里直接加上 **/ 255**。
+  由于**animated-icons**的源码写的是固定颜色值 **[0,0,0,1]** 的，我以为就是正常的 **[0-255]** 的rgb+alpha，所以我就自己改成了变量r，g，b然后动态赋颜色值。昨天测试发现，诶，它居然不是 **[0-255]**，而是 **[0-255] / 255**。哈哈哈哈所以我就在组件赋值那里直接加上 **/ 255**。
 
 * **版本0.2.8、版本0.2.7**
 
-    更新时间：2020.07.08
+  更新时间：2020.07.08
 
-    添加了展示页，更新了readme.md文件。
+  添加了展示页，更新了readme.md文件。
 
 * **版本0.2.6**
 
-    更新时间：2020.07.08
+  更新时间：2020.07.08
 
-    1.由于和风天气更改了开发文档，API和内容变动了，因此更换天气预报数据，来源于[中国天气网](http://www.weather.com.cn/)。
+  1.由于和风天气更改了开发文档，API和内容变动了，因此更换天气预报数据，来源于[中国天气网](http://www.weather.com.cn/)。
 
-    2.改了个小问题
+  2.改了个小问题
 
 * **版本0.2.4**
 
-    更新时间：2020.07.07
+  更新时间：2020.07.07
 
-    天气预报数据，来源于[和风天气](https://www.heweather.com/)。
+  天气预报数据，来源于[和风天气](https://www.heweather.com/)。
 
 * **版本0.2.3之前**
 
-    测试，改bug等。
+  测试，改bug等。
 
 **说明**
 

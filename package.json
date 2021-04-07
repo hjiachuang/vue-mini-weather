@@ -1,39 +1,27 @@
 {
   "name": "vue-mini-weather",
   "description": "基于 Vue 的迷你天气预报组件",
-  "version": "0.3.1",
+  "keyword": "vue weather mini-weather",
+  "version": "0.3.2",
   "author": "aidioute",
   "license": "MIT",
-  "main": "dist/index.js",
-  "keyword": "vue weather mini-weather",
   "private": false,
+  "main": "./main.js",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lib": "vue-cli-service build --target lib --name index src/lib/index.js --dest npm"
   },
   "dependencies": {
-    "axios": "^0.18.1",
-    "lottie-web": "^5.7.0",
-    "vue": "^2.5.11"
+    "axios": "^0.21.1",
+    "lottie-web": "^5.7.8"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ],
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-stage-3": "^6.24.1",
-    "cross-env": "^5.0.5",
-    "css-loader": "^0.28.7",
-    "file-loader": "^1.1.4",
-    "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.6",
-    "vue-loader": "^13.0.5",
-    "vue-template-compiler": "^2.4.4",
-    "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.9.1"
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "vue-template-compiler": "^2.6.11",
+    "core-js": "^3.6.5",
+    "vue": "^2.6.11",
+    "ant-design-vue": "^1.7.4"
   }
 }
