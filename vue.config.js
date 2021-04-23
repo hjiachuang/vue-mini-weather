@@ -1,4 +1,8 @@
 module.exports = {
+    devServer: {
+        hot: true,
+        open: true,
+    },
     publicPath:'./',
     configureWebpack: config => {
         if (process.env.NODE_ENV === 'production') {
