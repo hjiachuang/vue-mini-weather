@@ -44,8 +44,6 @@ import { message } from 'ant-design-vue'
 import 'ant-design-vue/lib/message/style/index.css'
 import weatherIcon from './iconJson'
 
-const getWeatherUrlBase = 'https://apia.aidioute.cn/weather/index.php?'
-
 export default {
   name: "vMiniWeather",
   props: {
@@ -64,6 +62,10 @@ export default {
     iconSize: {
       type: Number,
       default: 100
+    },
+    url: {
+      type: String,
+      default: 'https://apia.aidioute.cn/weather/index.php'
     }
   },
   data: () => ({
@@ -141,15 +143,18 @@ export default {
     async getWeather() {
       let url = ''
       if(this.location) {
-        url = `${getWeatherUrlBase}location_type=1&lat=${this.location.latitude}&lng=${this.location.longitude}`
+        url = `${this.url}?location_type=1&lat=${this.location.latitude}&lng=${this.location.longitude}`
       } else {
-        url = `${getWeatherUrlBase}location_type=0`
+        url = `${this.url}?location_type=0`
       }
       try {
         const weather = await axios.get(url)
         if (weather.status === 200 && weather.data.error === 0) {
           this.weather = weather.data.data.weather
           this.position = weather.data.data.location
+          if (weather.data.data.location.error_msg !== '成功。') {
+            message.warning(weather.data.data.location.error_msg)
+          }
           this.showIcon()
         } else {
           message.error("网络错误!")

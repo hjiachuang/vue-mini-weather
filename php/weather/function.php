@@ -1,6 +1,6 @@
 <?php
 //腾讯Api_key
-define('TX_KEY','这里替换为你的腾讯地图API的Key');
+define('TX_KEY','这里替换为自己的腾讯地图API的key');
 
 //通过ip地址获取详细位置信息方法
 function position_by_ip() {
@@ -10,12 +10,21 @@ function position_by_ip() {
   $tencent_api = "https://apis.map.qq.com/ws/location/v1/ip?key=".TX_KEY."&ip=$ip";
   $position_result = json_decode(send_get($tencent_api),true);
   if($position_result['status'] === 0) {
-      $province = $position_result['result']['ad_info']['province'] !== '' ? $position_result['result']['ad_info']['province'] : '广东省';
-      $city = $position_result['result']['ad_info']['city'] !== '' ? $position_result['result']['ad_info']['city'] : '广州市';
-      $district = $position_result['result']['ad_info']['district'] !== '' ? $position_result['result']['ad_info']['district'] : '';
-      if($position_result['result']['ad_info']['province'] == '' && $position_result['result']['ad_info']['city'] == ''){
-          $district = '天河区';
+      if($position_result['result']['ad_info']['province'] === '' || $position_result['result']['ad_info']['city'] === '' || $position_result['result']['ad_info']['district'] === '') {
+        return array(
+            'province' => '广东省',
+            'city' => '广州市',
+            'area' => '天河区',
+            'address' => '广东省广州市天河区天河路299号',
+            'lng' => 113.32695,
+            'lat' => 23.13374,
+            'ip' => $ip,
+            'error_msg' => '你可能在中国台湾省，亦或者不在中国，将显示默认的广东广州天气。'
+        );
       }
+      $province = $position_result['result']['ad_info']['province'];
+      $city = $position_result['result']['ad_info']['city'];
+      $district = $position_result['result']['ad_info']['district'];
       $address = $province.''.$city.''.$district;
       return array(
           'province' => $province,
@@ -23,7 +32,9 @@ function position_by_ip() {
           'area' => $district,
           'address' => $address,
           'lng' => $position_result['result']['location']['lng'],
-          'lat' => $position_result['result']['location']['lat']
+          'lat' => $position_result['result']['location']['lat'],
+          'ip' => $ip,
+          'error_msg' => '成功。'
       );
   }
 

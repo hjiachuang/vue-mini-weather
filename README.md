@@ -13,9 +13,9 @@
 #### 项目展示
 [vue-mini-weather展示页](https://apia.aidioute.cn/resource/vue-mini-weather/)
 
-> 基于Vue框架开发的一款迷你天气预报展示的小组件 有问题请提[issue](https://github.com/hjiachuang/vue-mini-weather/issues)
+> 基于Vue框架开发的一款迷你天气预报展示的小组件，目前只支持中国大陆的天气预报，原因在更新公告中有，有问题请提[issue](https://github.com/hjiachuang/vue-mini-weather/issues)
 #### 📦 安装
-*  2021.04.23 因为刚上传到npm仓库没多久，可能其他镜像库还没有镜像过去，所以要下载只能切换npm源为官方源。
+*  2021.04.24 因为刚上传到npm仓库没多久，可能其他镜像库还没有镜像过去，所以要下载只能切换npm源为官方源。
 
 ```bash
 npm i vue-mini-weather --save
@@ -31,13 +31,13 @@ Vue.use(weather)
 
 //app.vue 项目文件
 <template>
-  <v-mini-weather size type color iconSize ></v-mini-weather>
+  <v-mini-weather size type color iconSize url ></v-mini-weather>
 </template>
 
 // 2. 局部引入 
 //app.vue 项目文件
 <template>
-  <v-mini-weather size type color iconSize ></v-mini-weather>
+  <v-mini-weather size type color iconSize url ></v-mini-weather>
 </template>
 
 <script>
@@ -68,6 +68,10 @@ color: {        //天气小组件的字体和icon的颜色，只接受16进制�
 iconSize: {     //天气小组件在 multiline 类型下icon的尺寸大小，是数字类型的数据，单位为px，默认是100。
     type: Number,
     default: 100
+},
+url: {     //天气小组件调用的天气查询API
+  type: String,
+  default: 'https://apia.aidioute.cn/weather/index.php'
 }
 ```
 
@@ -75,12 +79,13 @@ iconSize: {     //天气小组件在 multiline 类型下icon的尺寸大小，�
 
 ##### 📖 更新
 
-* **版本0.3.3**
+* **版本0.3.3、版本0.3.4**
   
-  更新时间：2021.04.23
+  更新时间：2021.04.24
 
-  1. 这位老哥[fpandzc](https://github.com/fpandzc)提出的issues，解决开启VPN定位到国外直接报网络错误。又修改了一次数据源，需要使用腾讯地图API解决位置信息的问题，php的API已修改，需自行注册腾讯地图API，然后填上你的Key。npm仓库的api依旧是调用我运行在辣鸡服务器上的，同上个版本更新一个意思，需要的话最好自己下载php源文件部署到自己服务器上然后改源码，谢谢。
-  2. 大气压强显示错误的bug。
+  1. 这位老哥[fpandzc](https://github.com/fpandzc)提出的issues，解决开启VPN定位到国外直接报网络错误，现在修改为，如果定位不在中国大陆的，统一显示广东广州的天气（这个原因是腾讯地图无法通过IP定位精准定位到中国大陆以外的地方，且天气数据源无法获取中国以外的天气）。
+  2. 添加了一个新的props参数。为啥呢，因为：又修改了一次数据源，需要使用腾讯地图API解决位置信息的问题，php文件已修改，需自行注册腾讯地图API，然后在function.php文件中填上你的Key。npm仓库的api依旧默认是调用我运行在辣鸡服务器上的，同上个版本更新一个意思，需要的话最好自己下载php源文件部署到自己服务器上，然后给组件传个url值就行，谢谢。
+  3. 大气压强显示错误的bug。
 
 * **版本0.3.2**
 
