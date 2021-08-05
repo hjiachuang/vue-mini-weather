@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src='https://raw.githubusercontent.com/hjiachuang/vue-mini-weather/master/weather.png' />
+<img src='https://apia.aidioute.cn/resource/vue-mini-weather/weather.png' />
 
 ![GitHub watchers](https://img.shields.io/github/watchers/hjiachuang/vue-mini-weather?style=social) ![GitHub stars](https://img.shields.io/github/stars/hjiachuang/vue-mini-weather?style=social) ![GitHub forks](https://img.shields.io/github/forks/hjiachuang/vue-mini-weather?style=social)
 <br />
