@@ -1,37 +1,33 @@
 <template>
   <div class="v-weather" @click="getWeather"
        :style="`color: rgb(${convartedColor[0]}, ${convartedColor[1]}, ${convartedColor[2]})`">
-    <!--简版天气一行展示       天气图标/城市/天气/温度-->
-    <div class="v-weather--small-oneline" v-if="size === 'small' && type === 'oneline'">
-      {{ position.area }} / {{ weather.weather }} / {{ weather.temp }}℃
-      <div class="v-weather-icon" ref="svgContainer"></div>
-    </div>
-    <!--标准天气一行展示       天气图标/更新日期/城市/天气/温度/风向/相对湿度/降水量-->
-    <div class="v-weather--normal-oneline" v-if="size === 'normal' && type === 'oneline'">
-      {{ position.area }} / {{ weather.weather }} / {{ weather.temp }}℃ / {{ weather.WD }}{{ weather.WS }} /
-      {{ weather.sd }} / {{ weather.rain }}mm / {{ weather.aqi }}
-      <div class="v-weather-icon" ref="svgContainer"></div>
-    </div>
-    <!--简版天气多行展示       天气图标/城市/天气/温度-->
-    <div class="v-weather--small-multiline" v-if="size === 'small' && type === 'multiline'">
+    <div :class="{
+      'is-small': size === 'small',
+      'is-normal': size === 'normal',
+      'is-oneline': type === 'oneline',
+      'is-multiline': type === 'multiline'
+    }">
+      <span v-if="size === 'small' && type === 'oneline'">{{ position.area }} / {{ weather.weather }} / {{ weather.temp }}℃</span>
+      <span v-if="size === 'normal' && type === 'oneline'">{{ position.area }} / {{ weather.weather }} / {{ weather.temp }}℃ / {{ weather.WD }}{{ weather.WS }} /
+      {{ weather.sd }} / {{ weather.rain }}mm / {{ weather.aqi }}</span>
+      <div class="v-weather-icon" ref="svgContainer" v-if="type === 'oneline'"></div>
       <div class="v-weather-icon" :style="`width: ${this.iconSize}px; height: ${this.iconSize}px`"
-           ref="svgContainer"></div>
-      <p>{{ position.area }}</p>
-      <p>{{ weather.temp }}℃ / {{ weather.weather }}</p>
-    </div>
-    <!--标准天气多行展示       天气图标/城市/天气/温度-->
-    <div class="v-weather--normal-multiline" v-if="size === 'normal' && type === 'multiline'">
-      <div class="v-weather-icon" :style="`width: ${this.iconSize}px; height: ${this.iconSize}px`"
-           ref="svgContainer"></div>
-      <p>坐标：{{ position.area }}</p>
-      <p>天气：{{ weather.weather }}</p>
-      <p>气温：{{ weather.temp }}℃</p>
-      <p>风向：{{ weather.WD }}</p>
-      <p>风力：{{ weather.WS }}</p>
-      <p>降水量：{{ weather.rain }}mm</p>
-      <p>相对湿度：{{ weather.sd }}</p>
-      <p>大气压强：{{ weather.qy }}hPa</p>
-      <p>空气质量：{{ weather.aqi }}</p>
+           ref="svgContainer" v-if="type=== 'multiline'"></div>
+      <template v-if="size === 'small' && type === 'multiline'">
+        <p>{{ position.area }}</p>
+        <p>{{ weather.temp }}℃ / {{ weather.weather }}</p>
+      </template>
+      <template v-if="size === 'normal' && type === 'multiline'">
+        <p>坐标：{{ position.area }}</p>
+        <p>天气：{{ weather.weather }}</p>
+        <p>气温：{{ weather.temp }}℃</p>
+        <p>风向：{{ weather.WD }}</p>
+        <p>风力：{{ weather.WS }}</p>
+        <p>降水量：{{ weather.rain }}mm</p>
+        <p>相对湿度：{{ weather.sd }}</p>
+        <p>大气压强：{{ weather.qy }}hPa</p>
+        <p>空气质量：{{ weather.aqi }}</p>
+      </template>
     </div>
   </div>
 </template>
@@ -49,11 +45,17 @@ export default {
   props: {
     size: {
       type: String,
-      default: "small"
+      default: "small",
+      validator: value => {
+        return ['small', 'normal'].includes(value)
+      }
     },
     type: {
       type: String,
-      default: "oneline"
+      default: "oneline",
+      validator: value => {
+        return ['oneline', 'multiline'].includes(value)
+      }
     },
     color: {
       type: String,
@@ -78,7 +80,7 @@ export default {
     errorMsg: ""
   }),
   watch: {
-    async color(data) {
+    color(data) {
       this.convartColor()
       Lottie.destroy()
       if (this.weather.hasOwnProperty('code')) {
@@ -88,7 +90,7 @@ export default {
       }
     }
   },
-  async mounted() {
+  mounted() {
     this.convartColor()
     this.getLocation()
     this.timer = setInterval(() => {
@@ -192,7 +194,7 @@ p {
   user-select: none;
 }
 
-.v-weather--small-oneline, .v-weather--normal-oneline {
+.v-weather> .is-small.is-oneline, .v-weather> .is-normal.is-oneline {
   /*display: inline-block;*/
   height: 44px;
   line-height: 44px;
@@ -201,7 +203,7 @@ p {
   position: relative;
 }
 
-.v-weather--small-oneline .v-weather-icon, .v-weather--normal-oneline .v-weather-icon {
+.v-weather> .is-small.is-oneline> .v-weather-icon, .v-weather> .is-normal.is-oneline> .v-weather-icon {
   position: absolute;
   top: 7px;
   left: 10px;
@@ -209,41 +211,41 @@ p {
   height: 30px;
 }
 
-.v-weather--small-multiline {
+.v-weather> .is-small.is-multiline {
   display: inline-block;
   padding: 6px 20px;
   position: relative;
   text-align: center;
 }
 
-.v-weather--small-multiline .v-weather-icon {
+.v-weather> .is-small.is-multiline> .v-weather-icon {
   margin: 0 auto;
 }
 
-.v-weather--small-multiline p {
+.v-weather> .is-small.is-multiline> p {
   height: 24px;
   line-height: 24px;
   font-size: 16px;
 }
 
-.v-weather--normal-multiline {
+.v-weather> .is-normal.is-multiline {
   display: inline-block;
   padding: 6px 20px;
   position: relative;
   text-align: center;
 }
 
-.v-weather--normal-multiline .v-weather-icon {
+.v-weather> .is-normal.is-multiline> .v-weather-icon {
   margin: 0 auto;
 }
 
-.v-weather--normal-multiline .map {
+.v-weather> .is-normal.is-multiline> .map {
   height: 30px;
   line-height: 30px;
   font-size: 16px;
 }
 
-.v-weather--normal-multiline .map div {
+.v-weather> .is-normal.is-multiline> .map div {
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -251,11 +253,9 @@ p {
   vertical-align: middle;
 }
 
-.v-weather--normal-multiline p {
+.v-weather> .is-normal.is-multiline> p {
   height: 20px;
   line-height: 20px;
   font-size: 16px;
 }
-
-
 </style>

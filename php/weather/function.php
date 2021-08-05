@@ -10,34 +10,41 @@ function position_by_ip() {
   $tencent_api = "https://apis.map.qq.com/ws/location/v1/ip?key=".TX_KEY."&ip=$ip";
   $position_result = json_decode(send_get($tencent_api),true);
   if($position_result['status'] === 0) {
-      if($position_result['result']['ad_info']['province'] === '' || $position_result['result']['ad_info']['city'] === '' || $position_result['result']['ad_info']['district'] === '') {
-        return array(
-            'province' => '广东省',
-            'city' => '广州市',
-            'area' => '天河区',
-            'address' => '广东省广州市天河区天河路299号',
-            'lng' => 113.32695,
-            'lat' => 23.13374,
-            'ip' => $ip,
-            'error_msg' => '你可能在中国台湾省，亦或者不在中国，将显示默认的广东广州天气。'
-        );
-      }
-      $province = $position_result['result']['ad_info']['province'];
-      $city = $position_result['result']['ad_info']['city'];
-      $district = $position_result['result']['ad_info']['district'];
-      $address = $province.''.$city.''.$district;
+    if($position_result['result']['ad_info']['province'] === '' || $position_result['result']['ad_info']['city'] === '' || $position_result['result']['ad_info']['district'] === '') {
       return array(
-          'province' => $province,
-          'city' => $city,
-          'area' => $district,
-          'address' => $address,
-          'lng' => $position_result['result']['location']['lng'],
-          'lat' => $position_result['result']['location']['lat'],
+          'province' => '广东省',
+          'city' => '广州市',
+          'area' => '天河区',
+          'address' => '广东省广州市天河区天河路299号',
+          'lng' => 113.32695,
+          'lat' => 23.13374,
           'ip' => $ip,
-          'error_msg' => '成功。'
+          'error_msg' => '你可能在中国台湾省，亦或者不在中国，将显示默认的广东广州天气。'
       );
+    }
+    $province = $position_result['result']['ad_info']['province'];
+    $city = $position_result['result']['ad_info']['city'];
+    $district = $position_result['result']['ad_info']['district'];
+    $address = $province.''.$city.''.$district;
+    return array(
+      'province' => $province,
+      'city' => $city,
+      'area' => $district,
+      'address' => $address,
+      'lng' => $position_result['result']['location']['lng'],
+      'lat' => $position_result['result']['location']['lat'],
+      'ip' => $ip,
+      'error_msg' => '成功。'
+    );
+  }else {
+    return array(
+      'province' => '广东省',
+      'city' => '广州市',
+      'area' => '天河区',
+      'address' => '广东省广州市天河区',
+      'error_msg' => '定位失败(code: '.$position_result['status'].')，将显示默认的广东广州天气。'
+    );
   }
-
 }
 
 //获取用户请求时的ip地址的方法
@@ -63,23 +70,31 @@ function position_by_lng_and_lat($lng,$lat) {
   $tencent_api = "https://apis.map.qq.com/ws/geocoder/v1/?location=$location&key=".TX_KEY;
   $position_result = json_decode(send_get($tencent_api),true);
   if($position_result['status'] === 0) {
-      $province = $position_result['result']['ad_info']['province'] !== '' ? $position_result['result']['ad_info']['province'] : '广东省';
-      $city = $position_result['result']['ad_info']['city'] !== '' ? $position_result['result']['ad_info']['city'] : '广州市';
-      $district = $position_result['result']['ad_info']['district'] !== '' ? $position_result['result']['ad_info']['district'] : '';
-      if($position_result['result']['ad_info']['province'] == '' && $position_result['result']['ad_info']['city'] == ''){
-          $district = '天河区';
-      }
-      $address = $position_result['result']['address'] !== '' ? $position_result['result']['address'] : $province.''.$city.''.$district;
-      return array(
-          'province' => $province,
-          'city' => $city,
-          'area' => $district,
-          'address' => $address,
-          'lng' => $position_result['result']['location']['lng'],
-          'lat' => $position_result['result']['location']['lat']
-      );
+    $province = $position_result['result']['ad_info']['province'] !== '' ? $position_result['result']['ad_info']['province'] : '广东省';
+    $city = $position_result['result']['ad_info']['city'] !== '' ? $position_result['result']['ad_info']['city'] : '广州市';
+    $district = $position_result['result']['ad_info']['district'] !== '' ? $position_result['result']['ad_info']['district'] : '';
+    if($position_result['result']['ad_info']['province'] == '' && $position_result['result']['ad_info']['city'] == ''){
+        $district = '天河区';
+    }
+    $address = $position_result['result']['address'] !== '' ? $position_result['result']['address'] : $province.''.$city.''.$district;
+    return array(
+        'province' => $province,
+        'city' => $city,
+        'area' => $district,
+        'address' => $address,
+        'lng' => $position_result['result']['location']['lng'],
+        'lat' => $position_result['result']['location']['lat'],
+        'error_msg' => '成功。'
+    );
+  }else {
+    return array(
+      'province' => '广东省',
+      'city' => '广州市',
+      'area' => '天河区',
+      'address' => '广东省广州市天河区',
+      'error_msg' => '定位失败(code: '.$position_result['status'].')，将显示默认的广东广州天气。'
+    );
   }
-  
 }
 
 //通过用户传递的位置获取详细位置信息方法
@@ -87,14 +102,26 @@ function position_by_user_message($p,$c,$a,$ad) {
 
   $tencent_api = "https://apis.map.qq.com/ws/geocoder/v1/?address=$ad&key=".TX_KEY;
   $position_result = json_decode(send_get($tencent_api),true);
-  return array(
+  if($position_result['status'] === 0) {
+    return array(
       'province' => $p,
       'city' => $c,
       'area' => $a,
       'address' => $ad,
       'lng' => $position_result['result']['location']['lng'],
-      'lat' => $position_result['result']['location']['lat']
-  );
+      'lat' => $position_result['result']['location']['lat'],
+      'error_msg' => '成功。'
+    );
+  }else {
+    return array(
+      'province' => '广东省',
+      'city' => '广州市',
+      'area' => '天河区',
+      'address' => '广东省广州市天河区',
+      'error_msg' => '定位失败(code: '.$position_result['status'].')，将显示默认的广东广州天气。'
+    );
+  }
+  
 
 }
 

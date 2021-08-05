@@ -5,15 +5,15 @@
       <v-mini-weather class="weather" size="small" type="oneline" color="000000"></v-mini-weather>
     </div>
     <div class="two">
-      <pre>size:small; type:oneline; color: f5af19;</pre>
+      <pre>size:normal; type:oneline; color: f5af19;</pre>
       <v-mini-weather class="weather" size="normal" type="oneline" color="f5af19"></v-mini-weather>
     </div>
     <div class="three">
-      <pre>size:small; type:oneline; color: 99f2c8;</pre>
+      <pre>size:small; type:multiline; color: 99f2c8;</pre>
       <v-mini-weather class="weather" size="small" type="multiline" color="99f2c8"></v-mini-weather>
     </div>
     <div class="four">
-      <pre>size:small; type:oneline; color: 000046;</pre>
+      <pre>size:normal; type:multiline; color: ffffff;</pre>
       <v-mini-weather class="weather" size="normal" type="multiline" color="ffffff"></v-mini-weather>
     </div>
   </div>
