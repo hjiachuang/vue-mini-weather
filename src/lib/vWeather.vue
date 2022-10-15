@@ -1,261 +1,183 @@
 <template>
-  <div class="v-weather" @click="getWeather"
-       :style="`color: rgb(${convartedColor[0]}, ${convartedColor[1]}, ${convartedColor[2]})`">
-    <div :class="{
-      'is-small': size === 'small',
-      'is-normal': size === 'normal',
-      'is-oneline': type === 'oneline',
-      'is-multiline': type === 'multiline'
-    }">
-      <span v-if="size === 'small' && type === 'oneline'">{{ position.area }} / {{ weather.weather }} / {{ weather.temp }}℃</span>
-      <span v-if="size === 'normal' && type === 'oneline'">{{ position.area }} / {{ weather.weather }} / {{ weather.temp }}℃ / {{ weather.WD }}{{ weather.WS }} /
-      {{ weather.sd }} / {{ weather.rain }}mm / {{ weather.aqi }}</span>
-      <div class="v-weather-icon" ref="svgContainer" v-if="type === 'oneline'"></div>
-      <div class="v-weather-icon" :style="`width: ${this.iconSize}px; height: ${this.iconSize}px`"
-           ref="svgContainer" v-if="type=== 'multiline'"></div>
-      <template v-if="size === 'small' && type === 'multiline'">
-        <p>{{ position.area }}</p>
-        <p>{{ weather.temp }}℃ / {{ weather.weather }}</p>
-      </template>
-      <template v-if="size === 'normal' && type === 'multiline'">
-        <p>坐标：{{ position.area }}</p>
-        <p>天气：{{ weather.weather }}</p>
-        <p>气温：{{ weather.temp }}℃</p>
-        <p>风向：{{ weather.WD }}</p>
-        <p>风力：{{ weather.WS }}</p>
-        <p>降水量：{{ weather.rain }}mm</p>
-        <p>相对湿度：{{ weather.sd }}</p>
-        <p>大气压强：{{ weather.qy }}hPa</p>
-        <p>空气质量：{{ weather.aqi }}</p>
-      </template>
-    </div>
+  <div class="v-weather" @click="handleUpdate"
+       :style="`cursor: ${updating? 'not-allowed': 'pointer'}`">
+    <span v-if="updating">更新中...</span>
+    <slot v-if="!updating" :weather="weatherData"></slot>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import Lottie from 'lottie-web'
-
-import { message } from 'ant-design-vue'
-import 'ant-design-vue/lib/message/style/index.css'
-import weatherIcon from './iconJson'
 
 export default {
   name: "vMiniWeather",
   props: {
-    size: {
-      type: String,
-      default: "small",
-      validator: value => {
-        return ['small', 'normal'].includes(value)
-      }
-    },
-    type: {
-      type: String,
-      default: "oneline",
-      validator: value => {
-        return ['oneline', 'multiline'].includes(value)
-      }
-    },
-    color: {
-      type: String,
-      default: "000000"
-    },
-    iconSize: {
-      type: Number,
-      default: 100
-    },
     url: {
       type: String,
-      default: 'https://apia.aidioute.cn/weather/index.php'
+      default: 'https://apia.aidioute.cn/weather/'
     }
   },
   data: () => ({
-    convartedColor: [],
-    location: null,   //定位功能获取的经纬度
-    position: {},   //经纬度查询获得的位置信息
-    weather: {},
-    weatherIconAnimation: null,
-    timer: null,
-    errorMsg: ""
+    updating: false,
+    latitude: null,               // 定位功能获取的纬度
+    longitude: null,              // 定位功能获取的经度
+    weatherData: '',              // 天气数据
+    weather: '',                  // 天气类型
+    city: '',                     // 城市
+    temp: '',                     // 温度
+    weatherCode: '',              // 天气图标编号
+    timer: null                   // 定时器对象
   }),
-  watch: {
-    color(data) {
-      this.convartColor()
-      Lottie.destroy()
-      if (this.weather.hasOwnProperty('code')) {
-        this.showIcon()
-      } else {
-        this.getLocation()
-      }
-    }
-  },
   mounted() {
-    this.convartColor()
-    this.getLocation()
-    this.timer = setInterval(() => {
-      this.getLocation()
-    }, 30 * 60 * 1000)
+    this.handleGetLocation()
+    this.handleUpdate()
   },
   beforeDestroy() {
     clearInterval(this.timer)
   },
   methods: {
-    convartColor() {
-      const colorTemp = /([a-zA-Z0-9]{2})([a-zA-Z0-9]{2})([a-zA-Z0-9]{2})/.exec(this.color)
-      this.convartedColor = [
-        parseInt(`0x${colorTemp[1]}`),
-        parseInt(`0x${colorTemp[2]}`),
-        parseInt(`0x${colorTemp[3]}`)
-      ]
+    isObject(obj) {
+      return obj !== null && Object.prototype.toString.call(obj) === '[object Object]'
     },
-    getLocation() {
+    handleUpdate() {
+      if (!this.updating) {
+        this.updating = true
+        clearInterval(this.timer)
+        this.handleGetWeather()
+        this.timer = setInterval(() => {
+          this.handleGetWeather()
+        }, 30 * 60 * 1000)
+      }
+    },
+    handleGetLocation() {
       if (typeof window !== "undefined" && window.navigator.geolocation) {
         window.navigator.geolocation.getCurrentPosition(
-            (position) => {
-              this.location = {
-                latitude: position.coords.latitude.toFixed(6),
-                longitude: position.coords.longitude.toFixed(6)
-              }
-              this.getWeather()
+            (result) => {
+              this.latitude = result.coords.latitude.toFixed(6)
+              this.longitude = result.coords.longitude.toFixed(6)
             },
             (error) => {
               switch (error.code) {
                 case 0:
-                  message.warning("获取位置信息出错！将使用IP定位")
+                  this.handleSendError({
+                    type: 'warning',
+                    from: 'window.navigator.geolocation',
+                    msg: '获取位置信息出错！'
+                  })
                   break;
                 case 1:
-                  message.warning("您设置了阻止该页面获取位置信息！将使用IP定位")
+                  this.handleSendError({
+                    type: 'warning',
+                    from: 'window.navigator.geolocation',
+                    msg: '阻止该页面获取位置信息！'
+                  })
                   break;
                 case 2:
-                  message.warning("浏览器无法确定您的位置！将使用IP定位")
+                  this.handleSendError({
+                    type: 'warning',
+                    from: 'window.navigator.geolocation',
+                    msg: '浏览器无法确定您的位置！'
+                  })
                   break;
                 case 3:
-                  message.warning("获取位置信息超时！将使用IP定位")
+                  this.handleSendError({
+                    type: 'warning',
+                    from: 'window.navigator.geolocation',
+                    msg: '获取位置信息超时！'
+                  })
                   break;
               }
-              this.getWeather()
             }
         )
       } else {
-        message.warning("该浏览器不支持 HTML5 的定位功能！将使用IP定位")
-        this.getWeather()
+        this.handleSendError({
+          type: 'warning',
+          from: 'window.navigator.geolocation',
+          msg: '浏览器不支持 HTML5 的定位功能！'
+        })
       }
     },
-    async getWeather() {
-      let url = ''
-      if(this.location) {
-        url = `${this.url}?location_type=1&lat=${this.location.latitude}&lng=${this.location.longitude}`
-      } else {
-        url = `${this.url}?location_type=0`
-      }
+    async handleGetWeather() {
+      const url = this.latitude && this.longitude ?
+          `${this.url}?location_type=1&lat=${this.latitude}&lng=${this.longitude}&from=vmweather` :
+          `${this.url}?location_type=0&from=vmweather`
+
       try {
-        const weather = await axios.get(url)
-        if (weather.status === 200 && weather.data.error === 0) {
-          this.weather = weather.data.data.weather
-          this.position = weather.data.data.location
-          if (weather.data.data.location.error_msg !== '成功。') {
-            message.warning(weather.data.data.location.error_msg)
+        const response = await axios.get(url)
+        if (response.status === 200) {
+          const { data: result } = response
+          if (this.isObject(result) &&
+              'code' in result &&
+              'data' in result &&
+              result.code === 0
+          ) {
+            if (this.isObject(result.data) &&
+                'location' in result.data &&
+                this.isObject(result.data.location) &&
+                'error_msg' in result.data.location
+            ) {
+              console.log(`获取定位信息失败; status: 200; error: ${result.data.location.error_msg}`)
+              this.handleSendError({
+                type: 'warning',
+                from: 'server',
+                msg: result.data.location.error_msg
+              })
+            }
+            this.weatherData = result.data.weather
+            const { weather, cityname, temp, aqi, weathercode } = result.data.weather
+            this.weather = weather
+            this.city = cityname
+            this.temp = temp
+            this.aqi = aqi
+            this.weatherCode = weathercode
+            this.updating = false
+          } else {
+            this.updating = false
+            if (this.isObject(result) && 'msg' in result) {
+              console.log(`获取天气请求失败; status: 200; error: ${result.msg}`)
+              this.handleSendError({
+                type: 'error',
+                from: 'server',
+                msg: result.msg
+              })
+            } else {
+              console.log('获取天气请求失败; status: 200; error: 服务器异常')
+              this.handleSendError({
+                type: 'error',
+                from: 'server',
+                msg: '服务器异常'
+              })
+            }
           }
-          this.showIcon()
-        } else {
-          message.error("网络错误!")
         }
       } catch (err) {
-        console.log(err)
-        message.error("未知错误!")
+        this.updating = false
+        console.log(`获取天气请求失败; status: ${err.response.status};`)
+        this.handleSendError({
+          type: 'error',
+          from: 'axios.error',
+          msg: '网络请求失败'
+        })
       }
     },
-    showIcon() {
-      const svgContainer = this.$refs.svgContainer
-      if (this.weatherIconAnimation) {
-        this.weatherIconAnimation.destroy()
-      }
-      this.weatherIconAnimation = Lottie.loadAnimation({
-        wrapper: svgContainer,
-        animType: 'svg',
-        loop: true,
-        animationData: weatherIcon[this.weather.weather](this.convartedColor[0] / 255, this.convartedColor[1] / 255, this.convartedColor[2] / 255)
-      });
+    handleSendError(data) {
+      this.$emit('notice', data)
     }
   }
 }
 </script>
 
 <style scoped>
-p {
-  margin: 0;
-  padding: 0;
-}
-
 .v-weather {
-  display: inline-block;
   cursor: pointer;
   user-select: none;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
 }
-
-.v-weather> .is-small.is-oneline, .v-weather> .is-normal.is-oneline {
-  /*display: inline-block;*/
-  height: 44px;
-  line-height: 44px;
-  font-size: 14px;
-  padding: 0 20px 0 45px;
-  position: relative;
-}
-
-.v-weather> .is-small.is-oneline> .v-weather-icon, .v-weather> .is-normal.is-oneline> .v-weather-icon {
-  position: absolute;
-  top: 7px;
-  left: 10px;
+.v-weather> #vue-weather-icon-123456789 {
   width: 30px;
   height: 30px;
-}
-
-.v-weather> .is-small.is-multiline {
-  display: inline-block;
-  padding: 6px 20px;
-  position: relative;
-  text-align: center;
-}
-
-.v-weather> .is-small.is-multiline> .v-weather-icon {
-  margin: 0 auto;
-}
-
-.v-weather> .is-small.is-multiline> p {
-  height: 24px;
-  line-height: 24px;
-  font-size: 16px;
-}
-
-.v-weather> .is-normal.is-multiline {
-  display: inline-block;
-  padding: 6px 20px;
-  position: relative;
-  text-align: center;
-}
-
-.v-weather> .is-normal.is-multiline> .v-weather-icon {
-  margin: 0 auto;
-}
-
-.v-weather> .is-normal.is-multiline> .map {
-  height: 30px;
-  line-height: 30px;
-  font-size: 16px;
-}
-
-.v-weather> .is-normal.is-multiline> .map div {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  margin-left: -14px;
-  vertical-align: middle;
-}
-
-.v-weather> .is-normal.is-multiline> p {
-  height: 20px;
-  line-height: 20px;
-  font-size: 16px;
+  margin-right: 4px;
 }
 </style>

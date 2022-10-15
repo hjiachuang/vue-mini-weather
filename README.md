@@ -13,9 +13,13 @@
 #### 项目展示
 [vue-mini-weather展示页](https://apia.aidioute.cn/resource/vue-mini-weather/)
 
-> 基于Vue框架开发的一款迷你天气预报展示的小组件，目前只支持中国大陆的天气预报，原因在更新公告中有，有问题请提[issue](https://github.com/hjiachuang/vue-mini-weather/issues)
+> 基于 vue2.x 框架开发的一款迷你天气预报展示的小组件，目前只支持中国大陆的天气预报，原因在更新公告中有，有问题请提[issue](https://github.com/hjiachuang/vue-mini-weather/issues)
+
 #### 📦 安装
-*  2021.08.05 因为刚上传到npm仓库没多久，可能其他镜像库还没有镜像过去，所以要下载只能切换npm源为官方源。
+
+  **2022.10.15** 
+
+  **注意：因为刚上传到npm仓库没多久，可能其他镜像源还没有同步过去，所以要下载只能切换npm源。**
 
 ```bash
 npm i vue-mini-weather --save
@@ -31,20 +35,29 @@ Vue.use(weather)
 
 //app.vue 项目文件
 <template>
-  <v-mini-weather size type color iconSize url ></v-mini-weather>
+  <v-mini-weather>
+    <template #default="{weather}">
+      <v-mini-weather-icon :icon="weather.weathercode"></v-mini-weather-icon>
+    </template>
+  </v-mini-weather-icon>
 </template>
 
 // 2. 局部引入 
 //app.vue 项目文件
 <template>
-  <v-mini-weather size type color iconSize url ></v-mini-weather>
+  <v-mini-weather>
+    <template #default="{weather}">
+      <v-mini-weather-icon :icon="weather.weathercode"></v-mini-weather-icon>
+    </template>
+  </v-mini-weather-icon>
 </template>
 
 <script>
-import { vMiniWeather } from 'vue-mini-weather'
+import { vMiniWeather, vMiniWeatherIcon } from 'vue-mini-weather'
 export default {
   components: {
-    vMiniWeather
+    vMiniWeather,
+    vMiniWeatherIcon
   }
 }
 </script>
@@ -53,31 +66,34 @@ export default {
 
 #### 📝 参数说明
 ```javascript
-size: {         //天气小组件的尺寸，可以有"small"和"normal"，默认是"small"。
-    type: String,
-    default: "small"
-},
-type: {         //天气小组件的类型，可以有"oneline"和"multiline"，默认是"oneline"。
-    type: String,
-    default: "oneline"
-},
-color: {        //天气小组件的字体和icon的颜色，只接受16进制的rgb颜色值，但不需传"#"号，例如黑色："000000"，白色："ffffff"。
-    type: String,
-    default: "000000"
-},
-iconSize: {     //天气小组件在 multiline 类型下icon的尺寸大小，是数字类型的数据，单位为px，默认是100。
-    type: Number,
-    default: 100
-},
 url: {     //天气小组件调用的天气查询API
   type: String,
-  default: 'https://apia.aidioute.cn/weather/index.php'
+  default: 'https://apia.aidioute.cn/weather/'
 }
 ```
 
-#### 关于项目
-
 ##### 📖 更新
+
+* **版本0.3.6**
+  
+  更新时间：2022.10.15
+
+  1. 不喜欢写说明，写得看不懂的话，那就看多几遍吧
+  2. 天气图标换了，使用了这个大佬`basmilius`制作的天气图标，[点此前去膜拜](https://github.com/basmilius/weather-icons)
+  3. 嘛，款式可能大家并不是很喜欢，我也讨厌写样式，所以直接改成插槽的形式，自己DIY，不再预设款式，自己玩吧。
+  4. `v-mini-weather-icon`就只是一个展示天气图标的组件，不想要图标，那就不用这个组件就行，要用图标就要给它传个`icon`的参数，`icon`是有对应的参数值的，可以直接从插槽获得`weather`对象，把它里面的`weather.weathercode`传给它就行。
+  5. 添加了个`notice`事件，会接收一个类似如下的对象，是一个组件错误信息的传递，组件内部不再使用`antd`的`message`工具弹窗了，直接把消息传递给父组件，你自己接收自己打印也行，还是那句话，自己DIY吧。
+
+      ```javascript
+      {
+        type: '', // warning/error 警告或者错误
+        from: '', // window.navigator.geolocation/server/axios.error 错误来源，要么浏览器的定位功能，要么是服务器出错，要么就是网络请求出错
+        msg: '' // 错误信息
+      }
+      ```
+
+  6. 修改了部分PHP的代码，更人性化一点。**我还是建议你们自己下载php源码然后挂到自己的服务器上，然后传你们自己的url到组件，我那个小水管云服务器...嗯你们懂的。**
+
 
 * **版本0.3.5**
   
@@ -139,15 +155,15 @@ url: {     //天气小组件调用的天气查询API
 
   测试，改bug等。
 
-**说明**
+#### 📝 说明
 
-* 项目使用到了开源的天气动态icon，来源于[animated-icons](https://icons8.com/animated-icons#Weather)中的 **weather** 组。
+* 项目使用到了开源的天气动态icon，来源于[basmilius](https://github.com/basmilius/weather-icons)
 
 * 获取天气的前提是需要获取您当前的位置信息，默认使用HTML5的定位功能，如果定位失败的话，则采用IP地址定位的方式获取位置信息，再获取天气信息。
 
 * 获取IP地址的API是我自己的 [ip](https://api.aidioute.cn/ip/)
 
-**依赖**
+#### 📝 依赖
 
 * [axios](https://github.com/axios/axios)
 
