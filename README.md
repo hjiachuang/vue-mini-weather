@@ -39,7 +39,7 @@ Vue.use(weather)
     <template #default="{weather}">
       <v-mini-weather-icon :icon="weather.weathercode"></v-mini-weather-icon>
     </template>
-  </v-mini-weather-icon>
+  </v-mini-weather>
 </template>
 
 // 2. 局部引入 
@@ -49,7 +49,7 @@ Vue.use(weather)
     <template #default="{weather}">
       <v-mini-weather-icon :icon="weather.weathercode"></v-mini-weather-icon>
     </template>
-  </v-mini-weather-icon>
+  </v-mini-weather>
 </template>
 
 <script>
