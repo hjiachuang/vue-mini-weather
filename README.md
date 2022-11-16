@@ -42,7 +42,7 @@ Vue.use(weather)
       <!--DIY内容-->
       <span>{{weather.cityname}}/{{weather.weather}}/{{weather.temp}}</span>
     </template>
-  </v-mini-weather-icon>
+  </v-mini-weather>
 </template>
 
 // 2. 局部引入 
@@ -55,7 +55,7 @@ Vue.use(weather)
       <!--DIY内容-->
       <span>{{weather.cityname}}/{{weather.weather}}/{{weather.temp}}</span>
     </template>
-  </v-mini-weather-icon>
+  </v-mini-weather>
 </template>
 
 <script>
