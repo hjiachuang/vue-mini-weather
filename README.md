@@ -100,7 +100,7 @@ type: {     // 天气图标类型 -- fill / line
   1. 修改图标比例，之前版本的图标不协调，有些大有些小，重新改了。
   2. `v-mini-weather`默认还导出了一个参数`icon`，直接传给`v-mini-weather-icon`就可以了，详见上面的使用方法
   3. `v-mini-weather-icon`组件添加一个`props`参数: `type`，见上面的参数说明。
-  4. 注意：如果你是用`webpack`开发的，`vue2`脚手架新建的项目用的`webpack5`默认移除了`nodejs`核心模块的`polyfill`自动引入，在使用`axios`最新的`1.1.3`版本的时候，直接从`vue-mini-weather`引入的组件会报错，所以我默认依赖是`^0.21.1`版本打包的。你如果实在想用最新版本的`axios`，可以从`vue-mini-weather/src/lib`引入组件，就不报错了。
+  4. 注意：如果你是用`webpack`开发的，`vue2`脚手架新建的项目用的`webpack5`默认移除了`nodejs`核心模块的`polyfill`自动引入，在使用`axios`最新的`1.1.3`版本的时候，直接从`vue-mini-weather`引入的组件可能会报错，所以我默认依赖是`^0.21.1`版本打包的。你如果实在想用最新版本的`axios`，可以从`vue-mini-weather/src/lib`引入组件，就不报错了。
 
 * **版本0.3.6**
   
