@@ -1,0 +1,15 @@
+{
+  "name": "vue-mini-weather",
+  "description": "基于 Vue2.x 的迷你天气预报组件",
+  "keyword": "vue2 weather mini-weather",
+  "version": "0.3.7",
+  "author": "aidioute",
+  "license": "MIT",
+  "private": false,
+  "main": "./npm/index.umd.min.js",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "lottie-web": "^5.9.6",
+    "vue": "^2.6.14"
+  }
+}

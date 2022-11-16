@@ -1,19 +1,11 @@
-module.exports = {
-    devServer: {
-        hot: true,
-        open: true,
-    },
-    publicPath:'./',
-    configureWebpack: config => {
-        if (process.env.NODE_ENV === 'production') {
-            // 为生产环境修改配置...
-            config.externals = {
-              'axios': 'axios',
-              'lottie-web': 'lottie-web',
-            }
-        } else {
-            // 为开发环境修改配置...
-        }
-
+const { defineConfig } = require('@vue/cli-service')
+module.exports = defineConfig({
+  transpileDependencies: true,
+  // 编译成库时需要移除以下两个包的引用。
+  configureWebpack: config => {
+    config.externals = {
+      // axios: 'axios',
+      // 'lottie-web': 'lottie-web'
     }
-}
+  }
+})
