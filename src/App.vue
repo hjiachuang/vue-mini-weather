@@ -1,7 +1,7 @@
 <script>
 // import vMiniWeather from './lib/vMiniWeather.vue'
 // import vMiniWeatherIcon from './lib/vMiniWeatherIcon/vMiniWeatherIcon.vue'
-import { vMiniWeather, vMiniWeatherIcon } from '../npm/src/lib'
+import { vMiniWeather, vMiniWeatherIcon } from '../npm/'
 
 export default {
   components: {

@@ -15,12 +15,12 @@ function return_data(array $data): void {
 }
 
 /**
-* 结束当前程序并返回错误代码和错误信息（code:非0）
-* @param int $code 错误代码
-* @param int $status 状态码
-* @param array $extra 额外的数据
-* @return void 无返回值
-*/
+ * 结束当前程序并返回错误代码和错误信息（code:非0）
+ * @param int $code 错误代码
+ * @param int $status 状态码
+ * @param array $extra 额外的数据
+ * @return void 无返回值
+ */
 function return_err(int $code, int $status = 200, array $extra=[]): void {
   $default = array(
       'code' => $code,
