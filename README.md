@@ -1,5 +1,7 @@
 <h1 align="center">基于Vue2.x开发，webpack打包的迷你实时天气预报组件</h1>
 
+## 工作忙，没空更新，准备删库跑路。
+
 <div align="center">
 
 <img src='https://raw.githubusercontent.com/hjiachuang/vue-mini-weather/master/weather.png' />
